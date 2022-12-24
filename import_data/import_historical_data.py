@@ -1,7 +1,7 @@
 import boto3
 import pandas as pd
 import os 
-import pymysql
+import mysql_utl
 
 tables = {'companydb.jobs': 'id int not null, job  varchar(100), PRIMARY KEY (ID)',
          'companydb.departments': 'id int not null, job  varchar(100), PRIMARY KEY (ID)',
@@ -14,52 +14,20 @@ def read_s3(table_name):
 def rename_columns(df,dict):
     return df.rename(columns=dict)
 
-def mysql_connector():
-    endpoint='companydb.c3hqda7obrsd.us-east-1.rds.amazonaws.com'
-    user='admin'
-    pwd = os.getenv('mysql_pwd')
-
-    try:
-        return pymysql.connect(host=endpoint, user=user, passwd=pwd)
-    except Exception as e:
-        print("Database connection failed due to {}".format(e))
-
-def create_database(dbname):
-    conn = mysql_connector()
-
-    try:
-        cursor = conn.cursor()                                    
+def df_insert(mysql_connection, df, table_name):
+    for i,row in df.iterrows():
+        if table_name == 'companydb.jobs':
+            values = f"{row['id']},'{row['job']}'"
+        elif table_name == 'companydb.departments':
+            values = f"{row['id']},'{row['department']}'"            
+        elif table_name == 'companydb.hired_employees':
+            values = f"{row['id']},'{row['name']}','{row['datetime']}',{row['department_id']},{row['job_id']}"
         
-        sql_query = 'show databases'
-        cursor.execute(sql_query)
-        databases = cursor.fetchall()
-        
-        for database in databases:
-            if dbname == database[0]:
-                print (f'Database {dbname} already exists!')
-                return
-            
-        sql_statement = 'create database '+ dbname  
-        cursor.execute(sql_statement)
-        print (f'Database {dbname} created!')
-
-    except Exception as e:
-        print("Exeception occured:{}".format(e))
-    finally:
-        cursor.close()
+        mysql_connection.insert(f"insert into {table_name} values ({values});")
+        if i % 100 == 0:
+                mysql_connection.commit()
+    mysql_connection.commit()
     
-def create_table(table_name, table_scheme):
-    try:
-        conn = mysql_connector()
-        cursor = conn.cursor()
-        cursor.execute(f'create table {table_name} ({table_scheme});')
-
-        print (f'Table {table_name} created!')
-    except Exception as e:
-        print("Exeception occured:{}".format(e))
-    finally:
-        cursor.close()
-
 if __name__ == "__main__":
     
     s3_client=boto3.client('s3')
@@ -83,10 +51,20 @@ if __name__ == "__main__":
 
     df_hired.dropna(inplace=True)
 
-    create_database('companydb')
+    mysql_connection = mysql_utl.Mysql(endpoint='companydb.c3hqda7obrsd.us-east-1.rds.amazonaws.com', 
+                                     user='admin', 
+                                     pwd = os.getenv('mysql_pwd')
+                                    )
+
+    mysql_connection.create_database('companydb')
 
     for table_name, table_schema in tables.items():
-        create_table (table_name,table_schema)
+        mysql_connection.create_table(table_name,table_schema)
+    
+    df_insert(mysql_connection,df_jobs,'companydb.jobs')
+    df_insert(mysql_connection,df_departments,'companydb.departments')
+    df_insert(mysql_connection,df_hired,'companydb.hired_employees')
 
-
+    #Exeception occured:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Leahy','2022-01-16T19:23:39Z',7.0,19.0)' at line 1")
+    
     
