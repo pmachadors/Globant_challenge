@@ -21,7 +21,8 @@ def df_insert(mysql_connection, df, table_name):
         elif table_name == 'companydb.departments':
             values = f"{row['id']},'{row['department']}'"            
         elif table_name == 'companydb.hired_employees':
-            values = f"{row['id']},'{row['name']}','{row['datetime']}',{row['department_id']},{row['job_id']}"
+            # values = f"{row['id']},'{row['name']}','{row['datetime']}',{row['department_id']},{row['job_id']}"
+            values = f'{row["id"]},"{row["name"]}","{row["datetime"]}",{row["department_id"]},{row["job_id"]}'
         
         mysql_connection.insert(f"insert into {table_name} values ({values});")
         if i % 100 == 0:
@@ -50,7 +51,8 @@ if __name__ == "__main__":
                                              })
 
     df_hired.dropna(inplace=True)
-
+    # df_hired['name'] = df_hired['name'].apply(lambda x: x.replace("'", " "))
+    
     mysql_connection = mysql_utl.Mysql(endpoint='companydb.c3hqda7obrsd.us-east-1.rds.amazonaws.com', 
                                      user='admin', 
                                      pwd = os.getenv('mysql_pwd')
@@ -64,7 +66,5 @@ if __name__ == "__main__":
     df_insert(mysql_connection,df_jobs,'companydb.jobs')
     df_insert(mysql_connection,df_departments,'companydb.departments')
     df_insert(mysql_connection,df_hired,'companydb.hired_employees')
-
-    #Exeception occured:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Leahy','2022-01-16T19:23:39Z',7.0,19.0)' at line 1")
     
     
