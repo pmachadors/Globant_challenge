@@ -4,7 +4,7 @@ import os
 import mysql_utl
 
 tables = {'companydb.jobs': 'id int not null AUTO_INCREMENT, job  varchar(100), PRIMARY KEY (ID)',
-         'companydb.departments': 'id int not null AUTO_INCREMENT, job  varchar(100), PRIMARY KEY (ID)',
+         'companydb.departments': 'id int not null AUTO_INCREMENT, department varchar(100), PRIMARY KEY (ID)',
          'companydb.hired_employees': 'id int not null AUTO_INCREMENT, name varchar(200), datetime varchar(50), department_id int, job_id int, PRIMARY KEY (id), FOREIGN KEY (department_id) REFERENCES companydb.departments(id), FOREIGN KEY (job_id) REFERENCES companydb.jobs(id)'}
          
 def read_s3(table_name):   
