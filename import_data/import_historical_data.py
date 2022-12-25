@@ -3,9 +3,9 @@ import pandas as pd
 import os 
 import mysql_utl
 
-tables = {'companydb.jobs': 'id int not null, job  varchar(100), PRIMARY KEY (ID)',
-         'companydb.departments': 'id int not null, job  varchar(100), PRIMARY KEY (ID)',
-         'companydb.hired_employees': 'id int not null, name varchar(200), datetime varchar(50), department_id int, job_id int, PRIMARY KEY (id), FOREIGN KEY (department_id) REFERENCES companydb.departments(id), FOREIGN KEY (job_id) REFERENCES companydb.jobs(id)'}
+tables = {'companydb.jobs': 'id int not null AUTO_INCREMENT, job  varchar(100), PRIMARY KEY (ID)',
+         'companydb.departments': 'id int not null AUTO_INCREMENT, job  varchar(100), PRIMARY KEY (ID)',
+         'companydb.hired_employees': 'id int not null AUTO_INCREMENT, name varchar(200), datetime varchar(50), department_id int, job_id int, PRIMARY KEY (id), FOREIGN KEY (department_id) REFERENCES companydb.departments(id), FOREIGN KEY (job_id) REFERENCES companydb.jobs(id)'}
          
 def read_s3(table_name):   
     s3_bucket_name=f's3://globant-data/{table_name}.csv'
