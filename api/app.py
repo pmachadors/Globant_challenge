@@ -85,34 +85,34 @@ def get_hired_employees():
     result = HiredEmployeesModel.query.first()
     return result
 
-# @app.post('/jobs') 
-# @marshal_with(jobs_fields)
-# def post_jobs():
-#     job = JobsModel(job='teste')
-#     db.session.add(job)
-#     db.session.commit()
-#     return job
-
-@app.post('/jobs') 
 @marshal_with(jobs_fields)
+@app.post('/jobs')
 def post_jobs():
+    teste = request.get_json()
     jobs_insert = []
-    jobs_request = request.get_json()
-    for data_job in jobs_request:
-        if 'job' in data_job:
-            job = JobsModel(job=data_job['job'])
-            try:
-                db.session.add(job)
-                db.session.commit()
-                jobs_insert.append(job)
-            except SQLAlchemyError:
-                abort(500,message=f'Erro while inserting {data_job}')
-        else:
-            print (f'Field job is required. {data_job} not inserted')
-    if not jobs_insert:
-        abort(500,message=f'None job inserted')
-    return jobs_insert,200
+
+    for key, data in teste.items():
+        if key == 'jobs':
+            for row in data:
+                if 'job' in row:
+                    job = JobsModel(job=row['job'])
+                try:
+                    db.session.add(job)
+                    db.session.commit()
+                    jobs_insert.append(job)
+                except SQLAlchemyError:
+                    abort(500,message=f'Erro while inserting {row}')
+        elif key == 'departments':
+            for row in data:
+                if 'department' in row:
+                    job = JobsModel(job=row['department'])
+                try:
+                    db.session.add(job)
+                    db.session.commit()
+                    jobs_insert.append(job)
+                except SQLAlchemyError:
+                    abort(500,message=f'Erro while inserting {row}')
+    return jobs_insert,200         
 
 if __name__ == '__main__':
     app.run(debug=True)
-
