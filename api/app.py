@@ -23,8 +23,8 @@ class JobsModel(db.Model):
 
     # hired_employees = db.relationship('HiredEmployeesModel', back_populates='jobs',lazy='dynamics')
 
-    # def __repr__(self):
-    #     return f'Job(id = {self.id}'
+    def __repr__(self):
+        return f'Job(id = {self.id}'
 
 class DepartmentModel(db.Model):
     __tablename__ = 'departments'
@@ -34,8 +34,8 @@ class DepartmentModel(db.Model):
 
 #     hired_employees = db.relationship('HiredEmployeesModel', back_populates='departments',lazy='dynamics')
 
-#     def __repr__(self):
-#         return f'Department(id = {self.id}'
+    def __repr__(self):
+        return f'Department(id = {self.id}'
 
 class HiredEmployeesModel(db.Model):
     __tablename__ = 'hired_employees'
@@ -47,6 +47,9 @@ class HiredEmployeesModel(db.Model):
     # department = db.relationship('DepartmentModel', back_populates='hired_employees')    
     job_id = db.Column(db.Integer, db.ForeignKey('jobs.id'), nullable=False)
     # job = db.relationship('JobsModel', back_populates='hired_employees')
+
+    def __repr__(self):
+        return f'Hired_employee(id = {self.id}'
 
 jobs_fields = {
 	'id': fields.Integer,
@@ -82,7 +85,7 @@ def get_departments():
 @marshal_with(hired_employees_fields)
 def get_hired_employees():
     # result = HiredEmployeesModel.query.all()
-    result = HiredEmployeesModel.query.first()
+    result = HiredEmployeesModel.query.all()
     return result
 
 
@@ -95,34 +98,59 @@ def post_jobs():
                 if key == 'job':
                     print (print(value))
 
-@app.post('/jobs') 
+@app.post('/insert') 
 @marshal_with(jobs_fields)
 def post_jobs():
-    jobs_insert = []
-    jobs_request = request.get_json()
-    for data in jobs_request:
-        if 'job' in data:
-            job = JobsModel(job=data['job'])
+    data_insert = []
+    data_request = request.get_json()
+    
+    for table,fields in data_request.items():        
+        if table == 'jobs':
+                for values in fields:
+                    if 'job' in values:
+                        try:
+                            job = JobsModel(job=values['job'])
+                            db.session.add(job)
+                            db.session.commit()
+                            data_insert.append(job)
+                        except SQLAlchemyError:
+                            abort(500,message=f'Erro while inserting {values}')
+                    else:
+                        print (f'Field job is required. {values} not inserted')
+        elif table == 'departments':
+             for values in fields:
+                    if 'department' in values:
+                        try:
+                            department = DepartmentModel(department=values['department'])
+                            db.session.add(department)
+                            db.session.commit()
+                            data_insert.append(department)
+                        except SQLAlchemyError:
+                            abort(500,message=f'Erro while inserting {values}')
+                    else:
+                        print (f'Field department is required. {values} not inserted')
+        elif table == 'hired_employees':
+            for values in fields:
+                if 'name' in values:
+                    value_name = [values['name']]
+                elif 'datetime' in values:
+                    value_datetime = [values['datetime']]
+                elif 'department_id' in values:
+                    value_departments_id = [values['department_id']]
+                elif 'job_id' in values:
+                    value_job_id = [values['job_id']]
             try:
-                db.session.add(job)
+                hired_employee = HiredEmployeesModel(name=value_name,datetime=value_datetime, department_id=value_departments_id, job_id=value_job_id)
+                db.session.add(hired_employee)
                 db.session.commit()
-                jobs_insert.append(job)
+                data_insert.append(hired_employee)
             except SQLAlchemyError:
-                abort(500,message=f'Erro while inserting {data}')
-        elif 'department' in data:
-            department = DepartmentModel(department=data['department'])
-            try:
-                db.session.add(department)
-                db.session.commit()
-                jobs_insert.append(department)
-            except SQLAlchemyError:
-                abort(500,message=f'Erro while inserting {data}')
-        else:
-            print (f'Field job or department is required. {data} not inserted')
-    if not jobs_insert:
+                abort(500,message=f'Erro while inserting {values}')
+                    
+    if not data_insert:
         abort(500,message=f'None job inserted')
-    return jobs_insert,200
-
+    return data_insert,200
+    
 if __name__ == '__main__':
     app.run(debug=True)
 
