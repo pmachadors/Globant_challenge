@@ -5,10 +5,10 @@ import os
 from sqlalchemy.exc import SQLAlchemyError
 
 user='admin'
-pwd = os.getenv('mysql_pwd')
+pwd = os.getenv('mysql_new_pwd')
 port = 3306
 db_name = 'companydb'
-endpoint='companydb.c3hqda7obrsd.us-east-1.rds.amazonaws.com'
+endpoint='company.c3hqda7obrsd.us-east-1.rds.amazonaws.com'
 
 app = Flask(__name__)
 api = Api(app)
@@ -85,34 +85,44 @@ def get_hired_employees():
     result = HiredEmployeesModel.query.first()
     return result
 
-@marshal_with(jobs_fields)
-@app.post('/jobs')
-def post_jobs():
-    teste = request.get_json()
-    jobs_insert = []
 
-    for key, data in teste.items():
-        if key == 'jobs':
-            for row in data:
-                if 'job' in row:
-                    job = JobsModel(job=row['job'])
-                try:
-                    db.session.add(job)
-                    db.session.commit()
-                    jobs_insert.append(job)
-                except SQLAlchemyError:
-                    abort(500,message=f'Erro while inserting {row}')
-        elif key == 'departments':
-            for row in data:
-                if 'department' in row:
-                    job = JobsModel(job=row['department'])
-                try:
-                    db.session.add(job)
-                    db.session.commit()
-                    jobs_insert.append(job)
-                except SQLAlchemyError:
-                    abort(500,message=f'Erro while inserting {row}')
-    return jobs_insert,200         
+def post_jobs():
+    jobs_request = request.get_json()
+
+    for data in jobs_request:
+        if data == 'jobs':
+            for key, value in data.items:
+                if key == 'job':
+                    print (print(value))
+
+@app.post('/jobs') 
+@marshal_with(jobs_fields)
+def post_jobs():
+    jobs_insert = []
+    jobs_request = request.get_json()
+    for data in jobs_request:
+        if 'job' in data:
+            job = JobsModel(job=data['job'])
+            try:
+                db.session.add(job)
+                db.session.commit()
+                jobs_insert.append(job)
+            except SQLAlchemyError:
+                abort(500,message=f'Erro while inserting {data}')
+        elif 'department' in data:
+            department = DepartmentModel(department=data['department'])
+            try:
+                db.session.add(department)
+                db.session.commit()
+                jobs_insert.append(department)
+            except SQLAlchemyError:
+                abort(500,message=f'Erro while inserting {data}')
+        else:
+            print (f'Field job or department is required. {data} not inserted')
+    if not jobs_insert:
+        abort(500,message=f'None job inserted')
+    return jobs_insert,200
 
 if __name__ == '__main__':
     app.run(debug=True)
+

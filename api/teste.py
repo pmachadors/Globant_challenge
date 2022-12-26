@@ -5,10 +5,10 @@ import os
 from sqlalchemy.exc import SQLAlchemyError
 
 user='admin'
-pwd = os.getenv('mysql_pwd')
+pwd = os.getenv('mysql_new_pwd')
 port = 3306
 db_name = 'companydb'
-endpoint='companydb.c3hqda7obrsd.us-east-1.rds.amazonaws.com'
+endpoint='company.c3hqda7obrsd.us-east-1.rds.amazonaws.com'
 
 app = Flask(__name__)
 api = Api(app)
@@ -31,7 +31,6 @@ jobs_fields = {
 def get_jobs():
     result = JobsModel.query.all()
     return result
-
 
 if __name__ == '__main__':
     app.run(debug=True)

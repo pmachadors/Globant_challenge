@@ -53,9 +53,9 @@ if __name__ == "__main__":
     df_hired.dropna(inplace=True)
     # df_hired['name'] = df_hired['name'].apply(lambda x: x.replace("'", " "))
     
-    mysql_connection = mysql_utl.Mysql(endpoint='companydb.c3hqda7obrsd.us-east-1.rds.amazonaws.com', 
+    mysql_connection = mysql_utl.Mysql(endpoint='company.c3hqda7obrsd.us-east-1.rds.amazonaws.com', 
                                      user='admin', 
-                                     pwd = os.getenv('mysql_pwd')
+                                     pwd = os.getenv('mysql_new_pwd')
                                     )
 
     mysql_connection.create_database('companydb')
