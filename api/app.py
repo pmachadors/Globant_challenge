@@ -3,12 +3,14 @@ from flask_restful import Api,marshal_with,fields,abort
 from flask_sqlalchemy import SQLAlchemy
 import os
 from sqlalchemy.exc import SQLAlchemyError
+from marshmallow import Schema, fields
 
-user='admin'
+
+user= os.getenv('mysql_user')
 pwd = os.getenv('mysql_new_pwd')
 port = 3306
-db_name = 'companydb'
-endpoint='company.c3hqda7obrsd.us-east-1.rds.amazonaws.com'
+db_name = os.getenv('db_name')
+endpoint= os.getenv('end_point')
 
 app = Flask(__name__)
 api = Api(app)
@@ -26,6 +28,11 @@ class JobsModel(db.Model):
     def __repr__(self):
         return f'Job(id = {self.id}'
 
+class JobsSchema(Schema):
+    id = fields.Int()
+    job = fields.Str()
+
+
 class DepartmentModel(db.Model):
     __tablename__ = 'departments'
 
@@ -36,6 +43,10 @@ class DepartmentModel(db.Model):
 
     def __repr__(self):
         return f'Department(id = {self.id}'
+
+class DepartmentsSchema(Schema):
+    id = fields.Int()
+    department = fields.Str()
 
 class HiredEmployeesModel(db.Model):
     __tablename__ = 'hired_employees'
@@ -51,59 +62,41 @@ class HiredEmployeesModel(db.Model):
     def __repr__(self):
         return f'Hired_employee(id = {self.id}'
 
-jobs_fields = {
-	'id': fields.Integer,
-	'job': fields.String
-}
-
-departments_fields = {
-	'id': fields.Integer,
-	'department': fields.String
-}
-
-hired_employees_fields= {
-    'id': fields.Integer,
-	'name': fields.String,
-    'datetime': fields.String,
-    'department_id': fields.String,
-    'job_id': fields.String
-}
+class HiredEmployeeSchema(Schema):
+    id = fields.Int()
+    name = fields.Str()
+    datetime = fields.Str()
+    department_id = fields.Int()
+    job_id = fields.Int()
 
 @app.get('/jobs') 
-@marshal_with(jobs_fields)
 def get_jobs():
-    result = JobsModel.query.all()
+    jobs_schema = JobsSchema(many=True)
+    result = jobs_schema.dump(JobsModel.query.all())
     return result
 
 @app.get('/departments') 
-@marshal_with(departments_fields)
 def get_departments():
-    result = DepartmentModel.query.all()
+    departments_schema = DepartmentsSchema(many=True)
+    result = departments_schema.dump(DepartmentModel.query.all())
     return result
 
 @app.get('/hired_employees') 
-@marshal_with(hired_employees_fields)
 def get_hired_employees():
-    # result = HiredEmployeesModel.query.all()
-    result = HiredEmployeesModel.query.all()
+    hired_employees_schema = HiredEmployeeSchema(many=True)
+    result = hired_employees_schema.dump(HiredEmployeesModel.query.all())
     return result
 
 
-def post_jobs():
-    jobs_request = request.get_json()
-
-    for data in jobs_request:
-        if data == 'jobs':
-            for key, value in data.items:
-                if key == 'job':
-                    print (print(value))
-
 @app.post('/insert') 
-@marshal_with(jobs_fields)
 def post_jobs():
     data_insert = []
     data_request = request.get_json()
-    
+
+    jobs_schema = JobsSchema()                            
+    departments_schema = DepartmentsSchema()
+    hired_employees_schema = HiredEmployeeSchema()
+
     for table,fields in data_request.items():        
         if table == 'jobs':
                 for values in fields:
@@ -112,7 +105,7 @@ def post_jobs():
                             job = JobsModel(job=values['job'])
                             db.session.add(job)
                             db.session.commit()
-                            data_insert.append(job)
+                            data_insert.append(jobs_schema.dump(job))
                         except SQLAlchemyError:
                             abort(500,message=f'Erro while inserting {values}')
                     else:
@@ -124,7 +117,7 @@ def post_jobs():
                             department = DepartmentModel(department=values['department'])
                             db.session.add(department)
                             db.session.commit()
-                            data_insert.append(department)
+                            data_insert.append(departments_schema.dump(department))
                         except SQLAlchemyError:
                             abort(500,message=f'Erro while inserting {values}')
                     else:
@@ -143,9 +136,11 @@ def post_jobs():
                 hired_employee = HiredEmployeesModel(name=value_name,datetime=value_datetime, department_id=value_departments_id, job_id=value_job_id)
                 db.session.add(hired_employee)
                 db.session.commit()
-                data_insert.append(hired_employee)
+                data_insert.append(hired_employees_schema.dump(hired_employee))
             except SQLAlchemyError:
                 abort(500,message=f'Erro while inserting {values}')
+        else:
+            print(f'Table {table} does not exist. Not inserted:{table}{fields}')
                     
     if not data_insert:
         abort(500,message=f'None job inserted')
