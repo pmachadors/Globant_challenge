@@ -4,6 +4,9 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 from sqlalchemy.exc import SQLAlchemyError
 from marshmallow import Schema, fields
+import avro.schema
+from avro.datafile import DataFileReader, DataFileWriter
+from avro.io import DatumReader, DatumWriter
 
 
 user= os.getenv('mysql_user')
@@ -145,7 +148,30 @@ def post_jobs():
     if not data_insert:
         abort(500,message=f'None job inserted')
     return data_insert,200
+
+@app.post('/backup') 
+def post_backup():
+    tables_request = request.get_json()
+    list_backup = []
     
+    for tables in tables_request.values():
+        print (tables)
+        for table in tables:
+            print (table)
+            if not table in ('jobs','departments','hired_employees'):
+                print ({"table not valid": table})
+            else:
+                avro_schema = avro.schema.parse(open(f'api/avro/{table}.avsc', 'r').read())
+                writer = DataFileWriter(open(f'api/avro/{table}.avro', 'wb'), DatumWriter(), avro_schema)
+                result = db.engine.execute(f'select * from {table}')
+                print (result)
+                for row in result:
+                    writer.append(dict(row))
+                writer.close()
+                list_backup.append({table:"ok"})
+
+    return list_backup
+
 if __name__ == '__main__':
     app.run(debug=True)
 
