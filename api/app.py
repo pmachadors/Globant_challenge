@@ -8,7 +8,6 @@ import avro.schema
 from avro.datafile import DataFileReader, DataFileWriter
 from avro.io import DatumReader, DatumWriter
 
-
 user= os.getenv('mysql_user')
 pwd = os.getenv('mysql_new_pwd')
 port = 3306
@@ -173,5 +172,5 @@ def post_backup():
     return list_backup
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)
 
