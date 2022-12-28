@@ -54,16 +54,24 @@ docker docker-compose aws account
   ```
   http://127.0.0.1:5000/jobs
   ```
-
+  
+  ![jobs](https://user-images.githubusercontent.com/113646668/209836147-c85eb023-c6c4-4785-88de-20e935fdbfe7.png)
+  
   2.4. Search all Departments[GET]
   ```
   http://127.0.0.1:5000/departments
   ```
   
+  ![departments](https://user-images.githubusercontent.com/113646668/209836198-201782a4-e7ed-402b-b91a-1603e53973b6.png)
+
+  
   2.5. Search all Hired_employees[GET]
   ```
   http://127.0.0.1:5000/hired_employees
   ```
+  ![hired_employees](https://user-images.githubusercontent.com/113646668/209836256-f8767cdc-fc24-4ada-934e-d6f81f216543.png)
+
+  
   
   2.6. Backup your tables as Avro format[GET or POST]
   ```
