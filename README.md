@@ -18,8 +18,16 @@ Data Engineer challenge, consisting in steps:
 3. Create a feature to backup for each table and save it in the file system in AVRO format.
 4. Create a feature to restore a certain table with its backup.
 
+The csv files are stored in AWS S3 bucket and the database choosed was AWS RDS MySql. I used Insomnia software to test my REST API.
+
+# Requirements
+docker docker-compose aws account
+
 # Functionalities
-1. Historical data import was made in python script import_historical_data.py. The script will create the database and table and also insert data from csv jobs, departments and hired_employees stored in S3 AWS.
+1. Historical data import was made by python script import_historical_data.py. The script will create the database and tables and also insert data from csv jobs, departments and hired_employees stored in S3 AWS.
+
+ ![create companydb](https://user-images.githubusercontent.com/113646668/209831732-c345b5ac-2ef3-4beb-8fe4-deedd26133de.png)
+
   
 2. REST API created in flask. Endpoints:
   
@@ -38,9 +46,33 @@ Data Engineer challenge, consisting in steps:
   http://127.0.0.1:5000/hired_employees
   ```
   
-  2.4. Insert new rows, 1 to 1000. Put your data into json format, example: 
+  2.4. Backup your tables as Avro format
+  ```
+  http://127.0.0.1:5000/backup
+  ``` 
   
-  [{"Table name": ["table_field": "value"}]]
+  Usage:
+  Especify your backup type, in this case, table.
+  {"table"}
+  list of tables you want to backup:
+  ["jobs","departments", "hired_employees"]
+  
+  ex:
+  {"table": ["jobs","departments", "hired_employees"]}
+  
+  Return message from tables backup:
+  
+  ![backup](https://user-images.githubusercontent.com/113646668/209832802-227db482-b9c4-4fba-9c79-5eb8765ec407.png)
+  
+  
+  2.6. Post method: Insert new rows, 1 up to 1000 at once. Put your data into json format, example: 
+
+  ```
+  http://127.0.0.1:5000/insert
+  ```
+  
+  Usage:
+   [{"Table name": ["table_field": "value"}]]
   
   [
   {"jobs": [{"job": "job1"}]},
@@ -48,10 +80,16 @@ Data Engineer challenge, consisting in steps:
   {"departments": [{"department": "department1"}]},
   {"hired_employees": [{"name": "pablo"},{"datetime": "2021-11-07T02:48:42Z"},{"department_id": 1},{"job_id": 1}]}
   ]
-
+  
+  2.7. Get or Post method: Number of employees hired for each job and department in 2021 divided by quarter. The table must be ordered alphabetically by department and job.
   ```
-  http://127.0.0.1:5000/hired_employees
+  http://127.0.0.1:5000/hired_2021_quarter
   ```
   
+  2.6. Get or Post method: List of ids, name and number of employees hired of each department that hired more employees than the mean of employees hired in 2021 for all the departments, ordered by the number of employees hired (descending).
+  ```
+  http://127.0.0.1:5000/hired_department
+  ```
+ 
   
   
