@@ -40,28 +40,40 @@ docker docker-compose aws account
   
 2. REST API created in flask. Endpoints:
   
-  2.1. Search all jobs[GET]
+  2.1. Clone this repository:
+  ```
+  git clone https://github.com/pmachadors/Globant_challenge.git
+  ```
+  2.2. run docker-compose:
+  
+  ```
+  docker-compose up --build
+  ```
+  
+  2.3. Search all jobs[GET]
   ```
   http://127.0.0.1:5000/jobs
   ```
 
-  2.2. Search all Departments[GET]
+  2.4. Search all Departments[GET]
   ```
   http://127.0.0.1:5000/departments
   ```
   
-  2.3. Search all Hired_employees[GET]
+  2.5. Search all Hired_employees[GET]
   ```
   http://127.0.0.1:5000/hired_employees
   ```
   
-  2.4. Backup your tables as Avro format[GET or POST]
+  2.6. Backup your tables as Avro format[GET or POST]
   ```
   http://127.0.0.1:5000/backup
   ``` 
   
   Usage:
+  
   Especify your backup type, in this case, table.
+  
   {"table"}
   list of tables you want to backup:
   ["jobs","departments", "hired_employees"]
@@ -74,12 +86,13 @@ docker docker-compose aws account
   ![backup](https://user-images.githubusercontent.com/113646668/209832802-227db482-b9c4-4fba-9c79-5eb8765ec407.png)
   
   
-  2.5. Restore your tables from Avro format[GET or POST]
+  2.7. Restore your tables from Avro format[GET or POST]
   ```
   http://127.0.0.1:5000/restore
   ``` 
   
   Usage:
+  
   Especify your restore type, in this case, table.
   
   {"table"}
@@ -93,7 +106,7 @@ docker docker-compose aws account
 
 
   
-  2.6. Insert new rows, 1 up to 1000 at once. Put your data into json format[POST]
+  2.8. Insert new rows, 1 up to 1000 at once. Put your data into json format[POST]
 
   ```
   http://127.0.0.1:5000/insert
@@ -109,12 +122,12 @@ docker docker-compose aws account
   {"hired_employees": [{"name": "pablo"},{"datetime": "2021-11-07T02:48:42Z"},{"department_id": 1},{"job_id": 1}]}
   ]
   
-  2.7. Number of employees hired for each job and department in 2021 divided by quarter. The table must be ordered alphabetically by department and job[GET or POST]
+  2.9. Number of employees hired for each job and department in 2021 divided by quarter. The table must be ordered alphabetically by department and job[GET or POST]
   ```
   http://127.0.0.1:5000/hired_2021_quarter
   ```
   
-  2.8. List of ids, name and number of employees hired of each department that hired more employees than the mean of employees hired in 2021 for all the departments, ordered by the number of employees hired (descending)[GET or POST]
+  2.10. List of ids, name and number of employees hired of each department that hired more employees than the mean of employees hired in 2021 for all the departments, ordered by the number of employees hired (descending)[GET or POST]
   ```
   http://127.0.0.1:5000/hired_department
   ```
