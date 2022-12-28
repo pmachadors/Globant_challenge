@@ -119,6 +119,9 @@ docker docker-compose aws account
   ```
   http://127.0.0.1:5000/insert
   ```
+  ![insert](https://user-images.githubusercontent.com/113646668/209837343-8e177ee9-f890-4f95-94f2-c567e7d186d6.png)
+
+  
   
   Usage:
    [{"Table name": ["table_field": "value"}]]
@@ -134,11 +137,17 @@ docker docker-compose aws account
   ```
   http://127.0.0.1:5000/hired_2021_quarter
   ```
+  ![hired_2021_quarter](https://user-images.githubusercontent.com/113646668/209837383-ce2e3917-a6c3-4d97-86f9-0f7b898f723b.png)
+
+  
   
   2.10. List of ids, name and number of employees hired of each department that hired more employees than the mean of employees hired in 2021 for all the departments, ordered by the number of employees hired (descending)[GET or POST]
   ```
   http://127.0.0.1:5000/hired_department
   ```
+  
+  ![hired_department](https://user-images.githubusercontent.com/113646668/209837407-e05c1330-2137-43bf-84e3-c5c69aa9cca0.png)
+
  
   
   
