@@ -25,28 +25,37 @@ docker docker-compose aws account
 
 # Functionalities
 1. Historical data import was made by python script import_historical_data.py. The script will create the database and tables and also insert data from csv jobs, departments and hired_employees stored in S3 AWS.
+ Usage:
+ Export your RDS MySql connection variables like that:
+ 
+ export mysql_user=your_user
+ export db_name=your_db
+ export end_point=your_end_point
+ export mysql_new_pwd=your_password
+ 
+ python3 import_historical_data.py
 
  ![create companydb](https://user-images.githubusercontent.com/113646668/209831732-c345b5ac-2ef3-4beb-8fe4-deedd26133de.png)
 
   
 2. REST API created in flask. Endpoints:
   
-  2.1. Search all jobs
+  2.1. Search all jobs[GET]
   ```
   http://127.0.0.1:5000/jobs
   ```
 
-  2.2. Search all Departments
+  2.2. Search all Departments[GET]
   ```
   http://127.0.0.1:5000/departments
   ```
   
-  2.3. Search all Hired_employees
+  2.3. Search all Hired_employees[GET]
   ```
   http://127.0.0.1:5000/hired_employees
   ```
   
-  2.4. Backup your tables as Avro format
+  2.4. Backup your tables as Avro format[GET or POST]
   ```
   http://127.0.0.1:5000/backup
   ``` 
@@ -65,7 +74,26 @@ docker docker-compose aws account
   ![backup](https://user-images.githubusercontent.com/113646668/209832802-227db482-b9c4-4fba-9c79-5eb8765ec407.png)
   
   
-  2.6. Post method: Insert new rows, 1 up to 1000 at once. Put your data into json format, example: 
+  2.5. Restore your tables from Avro format[GET or POST]
+  ```
+  http://127.0.0.1:5000/restore
+  ``` 
+  
+  Usage:
+  Especify your restore type, in this case, table.
+  
+  {"table"}
+  list of tables you want to restore:
+  ["departments"]
+  
+  ex:
+  {"table": ["departments"]}
+  
+  ![restore](https://user-images.githubusercontent.com/113646668/209833454-6cf24180-5eb6-4721-9fb6-a90f8b49e016.png)
+
+
+  
+  2.6. Insert new rows, 1 up to 1000 at once. Put your data into json format[POST]
 
   ```
   http://127.0.0.1:5000/insert
@@ -81,12 +109,12 @@ docker docker-compose aws account
   {"hired_employees": [{"name": "pablo"},{"datetime": "2021-11-07T02:48:42Z"},{"department_id": 1},{"job_id": 1}]}
   ]
   
-  2.7. Get or Post method: Number of employees hired for each job and department in 2021 divided by quarter. The table must be ordered alphabetically by department and job.
+  2.7. Number of employees hired for each job and department in 2021 divided by quarter. The table must be ordered alphabetically by department and job[GET or POST]
   ```
   http://127.0.0.1:5000/hired_2021_quarter
   ```
   
-  2.6. Get or Post method: List of ids, name and number of employees hired of each department that hired more employees than the mean of employees hired in 2021 for all the departments, ordered by the number of employees hired (descending).
+  2.8. List of ids, name and number of employees hired of each department that hired more employees than the mean of employees hired in 2021 for all the departments, ordered by the number of employees hired (descending)[GET or POST]
   ```
   http://127.0.0.1:5000/hired_department
   ```
