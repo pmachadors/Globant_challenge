@@ -85,8 +85,7 @@ docker docker-compose aws account python3
    ``` 
 
    Usage:
-
-   Especify your backup type, in this case, table.
+   Send a json specifying the backup type, in this case table, and the tables you want to backup. You could use Insomnia to do it.
 
    {"table"}
    list of tables you want to backup:
@@ -106,8 +105,9 @@ docker docker-compose aws account python3
    ``` 
 
    Usage:
-
-   Especify your restore type, in this case, table.
+        
+   Send a json file specifying the restore type, in this case table, and the tables you want to restore.
+   (Insomnia)
 
    {"table"}
    list of tables you want to restore:
@@ -120,7 +120,8 @@ docker docker-compose aws account python3
 
 
 
-   2.6. Insert new rows, 1 up to 1000 at once. Put your data into json format[POST]
+   2.6. Insert new rows, 1 up to 1000 at once[POST].
+  
 
    ```
    http://127.0.0.1:5000/insert
@@ -128,7 +129,7 @@ docker docker-compose aws account python3
    ![insert](https://user-images.githubusercontent.com/113646668/209837343-8e177ee9-f890-4f95-94f2-c567e7d186d6.png)
 
 
-
+   Send your data in json format (Insomnia)
    Usage:
     [{"Table name": ["table_field": "value"}]]
 
