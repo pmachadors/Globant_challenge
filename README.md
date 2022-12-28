@@ -26,19 +26,19 @@ The csv files were stored in AWS S3 bucket and the database choosed was AWS RDS 
 docker docker-compose aws account python3
 
 # Functionalities
-1. Historical data import was made by python script import_historical_data.py. The script will create the database and tables and also insert data from csv jobs, departments and hired_employees stored in S3 AWS.
+1. Historical data import was develped in python. Script: import_historical_data.py. The script creates the database, tables and also insert the data from csv jobs, departments and hired_employees stored in S3 AWS.
 
-  Usage:
-  Export your RDS MySql connection variables like that:
+    Usage:
+    Export your RDS MySql connection variables like that:
 
-  export mysql_user=your_user
-  export db_name=your_db
-  export end_point=your_end_point
-  export mysql_new_pwd=your_password
+    export mysql_user=your_user
+    export db_name=your_db
+    export end_point=your_end_point
+    export mysql_new_pwd=your_password
 
-  python3 import_historical_data.py
+    python3 import_historical_data.py
 
-  ![create companydb](https://user-images.githubusercontent.com/113646668/209831732-c345b5ac-2ef3-4beb-8fe4-deedd26133de.png)
+    ![create companydb](https://user-images.githubusercontent.com/113646668/209831732-c345b5ac-2ef3-4beb-8fe4-deedd26133de.png)
 
   
 2. REST API created in flask. Endpoints:
@@ -55,7 +55,7 @@ docker docker-compose aws account python3
      docker-compose up --build
      ```
 
-   2.3. Search all jobs[GET]
+   2.1. Search all jobs[GET]
    ```
    http://127.0.0.1:5000/jobs
    ```
@@ -63,7 +63,7 @@ docker docker-compose aws account python3
    ![jobs](https://user-images.githubusercontent.com/113646668/209836147-c85eb023-c6c4-4785-88de-20e935fdbfe7.png)
    
 
-   2.4. Search all Departments[GET]
+   2.2. Search all Departments[GET]
    ```
    http://127.0.0.1:5000/departments
    ```
@@ -71,7 +71,7 @@ docker docker-compose aws account python3
    ![departments](https://user-images.githubusercontent.com/113646668/209836198-201782a4-e7ed-402b-b91a-1603e53973b6.png)
 
 
-   2.5. Search all Hired_employees[GET]
+   2.3. Search all Hired_employees[GET]
    ```
    http://127.0.0.1:5000/hired_employees
    ```
@@ -79,7 +79,7 @@ docker docker-compose aws account python3
 
 
 
-   2.6. Backup your tables as Avro format[GET or POST]
+   2.4. Backup your tables as Avro format[GET or POST]
    ```
    http://127.0.0.1:5000/backup
    ``` 
@@ -100,7 +100,7 @@ docker docker-compose aws account python3
    ![backup](https://user-images.githubusercontent.com/113646668/209832802-227db482-b9c4-4fba-9c79-5eb8765ec407.png)
 
 
-   2.7. Restore your tables from Avro format[GET or POST]
+   2.5. Restore your tables from Avro format[GET or POST]
    ```
    http://127.0.0.1:5000/restore
    ``` 
@@ -120,7 +120,7 @@ docker docker-compose aws account python3
 
 
 
-   2.8. Insert new rows, 1 up to 1000 at once. Put your data into json format[POST]
+   2.6. Insert new rows, 1 up to 1000 at once. Put your data into json format[POST]
 
    ```
    http://127.0.0.1:5000/insert
@@ -139,7 +139,7 @@ docker docker-compose aws account python3
    {"hired_employees": [{"name": "pablo"},{"datetime": "2021-11-07T02:48:42Z"},{"department_id": 1},{"job_id": 1}]}
    ]
 
-   2.9. Number of employees hired for each job and department in 2021 divided by quarter. The table must be ordered alphabetically by department and job[GET or POST]
+   2.7. Number of employees hired for each job and department in 2021 divided by quarter. The table must be ordered alphabetically by department and job[GET or POST]
    ```
    http://127.0.0.1:5000/hired_2021_quarter
    ```
@@ -147,7 +147,7 @@ docker docker-compose aws account python3
 
 
 
-   2.10. List of ids, name and number of employees hired of each department that hired more employees than the mean of employees hired in 2021 for all the departments, ordered by the number of employees hired (descending)[GET or POST]
+   2.8. List of ids, name and number of employees hired of each department that hired more employees than the mean of employees hired in 2021 for all the departments, ordered by the number of employees hired (descending)[GET or POST]
    ```
    http://127.0.0.1:5000/hired_department
    ```
