@@ -27,32 +27,33 @@ docker docker-compose aws account python3
 
 # Functionalities
 1. Historical data import was made by python script import_historical_data.py. The script will create the database and tables and also insert data from csv jobs, departments and hired_employees stored in S3 AWS.
- Usage:
- Export your RDS MySql connection variables like that:
- 
- export mysql_user=your_user
- export db_name=your_db
- export end_point=your_end_point
- export mysql_new_pwd=your_password
- 
- python3 import_historical_data.py
 
- ![create companydb](https://user-images.githubusercontent.com/113646668/209831732-c345b5ac-2ef3-4beb-8fe4-deedd26133de.png)
+  Usage:
+  Export your RDS MySql connection variables like that:
+
+  export mysql_user=your_user
+  export db_name=your_db
+  export end_point=your_end_point
+  export mysql_new_pwd=your_password
+
+  python3 import_historical_data.py
+
+  ![create companydb](https://user-images.githubusercontent.com/113646668/209831732-c345b5ac-2ef3-4beb-8fe4-deedd26133de.png)
 
   
 2. REST API created in flask. Endpoints:
+ 
+   Usage:  
+    Clone this repository:
+     ```
+     git clone https://github.com/pmachadors/Globant_challenge.git
+     ```
 
-   
-   2.1. Clone this repository:
-   ```
-   git clone https://github.com/pmachadors/Globant_challenge.git
-   ```
-   
-   2.2. run docker-compose:
+    Run docker-compose:
 
-   ```
-   docker-compose up --build
-   ```
+     ```
+     docker-compose up --build
+     ```
 
    2.3. Search all jobs[GET]
    ```
