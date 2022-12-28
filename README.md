@@ -33,11 +33,15 @@ The csv files were stored in AWS S3 bucket and the database choosed was AWS RDS 
     Export your RDS MySql connection variables like that:
 
     export mysql_user=your_user
+    
     export db_name=your_db
+    
     export end_point=your_end_point
+    
     export mysql_new_pwd=your_password
-
-    python3 import_historical_data.py
+    
+    Than execute:
+    python3 import_data/import_historical_data.py
 
     ![create companydb](https://user-images.githubusercontent.com/113646668/209831732-c345b5ac-2ef3-4beb-8fe4-deedd26133de.png)
 
