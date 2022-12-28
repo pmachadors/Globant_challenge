@@ -23,7 +23,8 @@ Data Engineer challenge, consisting in steps:
 The csv files were stored in AWS S3 bucket and the database choosed was AWS RDS MySql. I used python and flask do build the REST API, and Insomnia software to test it.
 
 # Requirements
-docker docker-compose aws account python3
+[aws-account](https://aws.amazon.com/pt/console/) [python3](https://www.python.org/downloads/) [docker](https://docs.docker.com/engine/install/ubuntu/) [docker-compose](https://docs.docker.com/compose/install/)
+
 
 # Functionalities
 1. Historical data import was develped in python. Script: import_historical_data.py. The script creates the database, tables and also insert the data from csv jobs, departments and hired_employees stored in S3 AWS.
