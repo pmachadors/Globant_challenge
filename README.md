@@ -6,6 +6,7 @@
 ![Docker Compose](https://img.shields.io/badge/docker--compose-v1.29.2-blue)
 ![Ubuntu](https://img.shields.io/badge/ubuntu-v22.04-blue)
 ![Python](https://img.shields.io/badge/python-v3.10-blue)
+![Insomnia](https://img.shields.io/badge/insomnia-v2022.7.0-blue)
 
 # Description
 Data Engineer challenge, consisting in steps:
@@ -22,7 +23,7 @@ Data Engineer challenge, consisting in steps:
 The csv files are stored in AWS S3 bucket and the database choosed was AWS RDS MySql. I used Insomnia software to test my REST API.
 
 # Requirements
-docker docker-compose aws account
+docker docker-compose aws account python3
 
 # Functionalities
 1. Historical data import was made by python script import_historical_data.py. The script will create the database and tables and also insert data from csv jobs, departments and hired_employees stored in S3 AWS.
