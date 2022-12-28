@@ -161,8 +161,8 @@ def backup():
             if not table in ('jobs','departments','hired_employees'):
                 print ({"table not valid": table})
             else:
-                avro_schema = avro.schema.parse(open(f'api/avro/{table}.avsc', 'r').read())
-                writer = DataFileWriter(open(f'api/avro/{table}.avro', 'wb'), DatumWriter(), avro_schema)
+                avro_schema = avro.schema.parse(open(f'avro_schema/{table}.avsc', 'r').read())
+                writer = DataFileWriter(open(f'/backup/{table}.avro', 'wb'), DatumWriter(), avro_schema)
                 result = db.engine.execute(f'select * from {table}')
                 for row in result:
                     writer.append(dict(row))
@@ -175,11 +175,10 @@ def backup():
         abort(500,f'None table restored') 
 
 def check_backup(table_name):
-    path = os.getcwd()
-    tables = (os.listdir(f'{path}/api/avro/'))
+    tables = (os.listdir('/backup/'))
     table_name = table_name + '.avro'
     if table_name in tables:
-        return True
+        return True 
     else:
         return False
 
@@ -194,7 +193,7 @@ def restore():
                     print ({"Table not valid": table})
             else:
                 if check_backup(table):
-                    data_reader = DataFileReader(open(f'api/avro/{table}.avro', 'rb'), DatumReader())
+                    data_reader = DataFileReader(open(f'/backup/{table}.avro', 'rb'), DatumReader())
                     db.engine.execute(f'delete from {table}')
                     db.session.commit()
 
@@ -231,7 +230,7 @@ def restore():
 @app.route('/hired_2021_quarter', methods=['GET', 'POST'])
 def hired_2021_quarter():
     path = os.getcwd()
-    with open(f'{path}/api/dml/hired_2021_quarter.sql') as file:
+    with open(f'{path}/dml/hired_2021_quarter.sql') as file:
         sql_quarter = file.read()
         result = db.engine.execute(sql_quarter)
         return jsonify({'result': [dict(row) for row in result]})
@@ -239,7 +238,7 @@ def hired_2021_quarter():
 @app.route('/hired_department', methods=['GET', 'POST'])
 def hired_department():
     path = os.getcwd()
-    with open(f'{path}/api/dml/hired_department.sql') as file:
+    with open(f'{path}/dml/hired_department.sql') as file:
         sql_hired_department = file.read()
         result = db.engine.execute(sql_hired_department)
         return jsonify({'result': [dict(row) for row in result]})
