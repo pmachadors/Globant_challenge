@@ -2,11 +2,11 @@
 # Data Engineer challenge
 
 ![AWS](https://img.shields.io/badge/account-AWS-green)
+![Python](https://img.shields.io/badge/python-v3.10-blue)
+![Flask](https://img.shields.io/badge/flask-v2.2.2-blue)
 ![Docker Version](https://img.shields.io/badge/docker-v20.10.21-blue)
 ![Docker Compose](https://img.shields.io/badge/docker--compose-v1.29.2-blue)
 ![Ubuntu](https://img.shields.io/badge/ubuntu-v22.04-blue)
-![Python](https://img.shields.io/badge/python-v3.10-blue)
-![Flask](https://img.shields.io/badge/flask-v2.2.2-blue)
 ![Insomnia](https://img.shields.io/badge/insomnia-v2022.7.0-blue)
 
 # Description
