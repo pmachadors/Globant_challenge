@@ -42,20 +42,20 @@ by the number of employees hired (descending).
 
 
 # Functionalities
-**1. Historical data was import with python acript /import_data/import_historical_data.py. The script creates the database in AWS RDS MySql (passed in variables), tables and also insert the data from csv jobs, departments and hired_employees stored in AWS S3.**
+**1. Historical data imported with python script /import_data/import_historical_data.py. The script creates the database in AWS RDS MySql, tables and also insert the data from files jobs.csv, departments.csv and hired_employees.csv stored in AWS S3.**
 
- Usage: 
+ 
  Clone this repository:
      
      
     git clone https://github.com/pmachadors/Globant_challenge.git
      
      
- Create a AWS RDS MySql and export your connection variables like that:
+ Create a AWS RDS MySql connection and export your variables like that:
 
     export mysql_user=your_user
 
-    export db_name=your_db
+    export db_name=your_db_name
 
     export end_point=your_end_point
 
@@ -67,15 +67,16 @@ by the number of employees hired (descending).
     python3 import_data/import_historical_data.py
 
 
+**Expected result:**
+
    ![create companydb](https://user-images.githubusercontent.com/113646668/209831732-c345b5ac-2ef3-4beb-8fe4-deedd26133de.png)
 
   
   
-**2. REST API created in flask.**
+**2. REST API - Flask and Python**
  
-  Usage:
    
-  Pass your connection in dockerfile:
+  Pass your connection in the dockerfile:
    
     ENV mysql_user=your_user
     ENV db_name=your_db_name
@@ -120,16 +121,18 @@ by the number of employees hired (descending).
     http://127.0.0.1:5000/backup
    
 
-   Usage:
    
-   Send a json specifying the backup type, in this case table, and the tables you want to backup. You could use Insomnia to do it.
+   Send a json file specifying the backup type, in this case table, and the tables you want to backup. You could use Insomnia to do it.
 
-   {"table"}
-   list of tables you want to backup:
-   ["jobs","departments", "hired_employees"]
+    {"table"}
+    list of tables you want to backup:
+    ["jobs","departments", "hired_employees"]
 
-   ex:
-   {"table": ["jobs","departments", "hired_employees"]}
+   Example:
+   
+    
+    {"table": ["jobs","departments", "hired_employees"]}
+    
 
    Return message from tables backup:
 
@@ -142,18 +145,20 @@ by the number of employees hired (descending).
     http://127.0.0.1:5000/restore
    
 
-   Usage:
         
    Send a json file specifying the restore type, in this case table, and the tables you want to restore.
    (Insomnia)
 
-   {"table"}
-   list of tables you want to restore:
-   ["departments"]
+    {"table"}
+    list of tables you want to restore:
+    ["departments"]
 
-   ex:
-   {"table": ["departments"]}
-
+   Example:
+   
+   
+    {"table": ["departments"]}
+   
+       
    ![restore](https://user-images.githubusercontent.com/113646668/209833454-6cf24180-5eb6-4721-9fb6-a90f8b49e016.png)
 
 
@@ -168,19 +173,21 @@ by the number of employees hired (descending).
 
 
    Send your data in json format (Insomnia)
-   Usage:
-    [{"Table name": ["table_field": "value"}]]
 
-   [
-   {"jobs": [{"job": "job1"}]},
-   {"jobs": [{"job": "job2"}]},
-   {"departments": [{"department": "department1"}]},
-   {"hired_employees": [{"name": "pablo"},{"datetime": "2021-11-07T02:48:42Z"},{"department_id": 1},{"job_id": 1}]}
-   ]
+    [{"Table name": ["table_field": "value"}]]
+    
+   Example:
+
+    [
+    {"jobs": [{"job": "job1"}]},
+    {"jobs": [{"job": "job2"}]},
+    {"departments": [{"department": "department1"}]},
+    {"hired_employees": [{"name": "pablo"},{"datetime": "2021-11-07T02:48:42Z"},{"department_id": 1},{"job_id": 1}]}
+    ]
 
    **2.7. Number of employees hired for each job and department in 2021 divided by quarter. The table must be ordered alphabetically by department and job[GET or POST]**
    
-   **SQL: api/dml/hired_2021_quarter.sql**
+   **SQL used: api/dml/hired_2021_quarter.sql**
    
     http://127.0.0.1:5000/hired_2021_quarter
    
@@ -190,7 +197,7 @@ by the number of employees hired (descending).
 
    **2.8. List of ids, name and number of employees hired of each department that hired more employees than the mean of employees hired in 2021 for all the departments, ordered by the number of employees hired (descending)[GET or POST]**
    
-   **SQL: /api/dml/hired_department.sql**
+   **SQL used: /api/dml/hired_department.sql**
        
     http://127.0.0.1:5000/hired_department
        
